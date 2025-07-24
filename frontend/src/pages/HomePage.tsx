@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+import { pageVariants, pageTransition } from "../animations";
 import React from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
@@ -52,45 +54,53 @@ const HomePage: React.FC = () => {
   );
 
   return (
-    <div className="home-container">
-      <aside className="sidebar">
-        <div className="sidebar-header">CogniFlow</div>
-        <button className="new-chat-button">+ Start new chat</button>
-        <input
-          type="search"
-          className="search-chats"
-          placeholder="Search for chats..."
-        />
-        <div className="chats-section">
-          <p>Chats</p>
-        </div>
-        <div className="sidebar-footer">
-          <div className="footer-item">
-            <UserIcon />
-            <span>Profile</span>
-          </div>
-          <div className="footer-item" onClick={handleLogout}>
-            <LogoutIcon />
-            <span>Logout</span>
-          </div>
-        </div>
-      </aside>
-      <main className="main-content">
-        <header className="main-header">
-          <p>Pages / CogniFlow</p>
-        </header>
-        <div className="chat-input-container">
+    <motion.div
+      initial="appinit"
+      animate="appin"
+      exit="appout"
+      variants={pageVariants}
+      transition={pageTransition}
+    >
+      <div className="home-container">
+        <aside className="sidebar">
+          <div className="sidebar-header">CogniFlow</div>
+          <button className="new-chat-button">+ Start new chat</button>
           <input
-            type="text"
-            className="chat-input"
-            placeholder="Apa takok opo?"
+            type="search"
+            className="search-chats"
+            placeholder="Search for chats..."
           />
-          <button className="send-button">
-            <SendIcon />
-          </button>
-        </div>
-      </main>
-    </div>
+          <div className="chats-section">
+            <p>Chats</p>
+          </div>
+          <div className="sidebar-footer">
+            <div className="footer-item">
+              <UserIcon />
+              <span>Profile</span>
+            </div>
+            <div className="footer-item" onClick={handleLogout}>
+              <LogoutIcon />
+              <span>Logout</span>
+            </div>
+          </div>
+        </aside>
+        <main className="main-content">
+          <header className="main-header">
+            <p>Pages / CogniFlow</p>
+          </header>
+          <div className="chat-input-container">
+            <input
+              type="text"
+              className="chat-input"
+              placeholder="Apa takok opo?"
+            />
+            <button className="send-button">
+              <SendIcon />
+            </button>
+          </div>
+        </main>
+      </div>
+    </motion.div>
   );
 };
 

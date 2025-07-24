@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
+import "../AssessmentResultPage.css";
 
 const AssessmentResultPage = () => {
   const location = useLocation();
@@ -8,39 +7,59 @@ const AssessmentResultPage = () => {
   const { adhdDetected } = location.state || { adhdDetected: false };
 
   const handleEnableAdhdMode = () => {
-    // Mocking API call
-    console.log('Enabling ADHD mode...');
-    // fetch('/api/v1/users/toggle-adhd-mode', { method: 'POST', body: JSON.stringify({ enable: true }) });
-    alert('ADHD Mode has been enabled! You will be redirected to the homepage.');
-    navigate('/');
+    console.log("Enabling ADHD mode...");
+    alert(
+      "ADHD Mode has been enabled! You will be redirected to the homepage."
+    );
+    navigate("/");
   };
 
   const handleContinue = () => {
-    navigate('/');
+    navigate("/");
   };
 
   return (
-    <div>
-      <h1>Your Assessment Result</h1>
-      {adhdDetected ? (
-        <div>
-          <h3>Based on your answers, you show some patterns consistent with ADHD.</h3>
-          <p>
-            ADHD (Attention-Deficit/Hyperactivity Disorder) is a neurodevelopmental disorder that affects executive functions of the brain, leading to difficulties in focusing attention, controlling impulses, and regulating activity levels. This is not a reflection of your intelligence or capability.
-          </p>
-          <p>
-            We provide an "ADHD Mode" that can help you focus better through features like Bionic Reading and display adjustments. Would you like to activate it?
-          </p>
-          <button onClick={handleEnableAdhdMode}>Activate ADHD Mode</button>
-          <button onClick={handleContinue} style={{ marginLeft: '10px' }}>Continue Without ADHD Mode</button>
-        </div>
-      ) : (
-        <div>
-          <h3>Thank You!</h3>
-          <p>Thank you for taking the time to complete the assessment. Based on your answers, you do not show strong patterns associated with ADHD.</p>
-          <button onClick={handleContinue}>Continue to Application</button>
-        </div>
-      )}
+    <div className="result-page-background">
+      <div className="result-card">
+        <h1>Your Assessment Result</h1>
+        {adhdDetected ? (
+          <div>
+            <h3>Patterns Consistent with ADHD Detected</h3>
+            <p>
+              Based on your answers, you show some patterns that are consistent
+              with ADHD. This is not a diagnosis, but an indication that you may
+              benefit from tools designed to aid focus.
+            </p>
+            <p>
+              Our application offers an "ADHD Mode" with features like Bionic
+              Reading and display adjustments to help create a more focused
+              experience.
+            </p>
+            <div className="button-group">
+              <button onClick={handleEnableAdhdMode} className="primary-button">
+                Activate ADHD Mode
+              </button>
+              <button onClick={handleContinue} className="secondary-button">
+                Continue Without
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <h3>Thank You for Completing the Assessment</h3>
+            <p>
+              Based on your answers, you do not show strong patterns typically
+              associated with ADHD. Thank you for taking the time to complete
+              the self-assessment.
+            </p>
+            <div className="button-group">
+              <button onClick={handleContinue} className="primary-button">
+                Continue to Application
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { pageVariants, pageTransition } from "../animations";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -53,58 +55,66 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>One step away to join Arsharatha.</h1>
-        <form onSubmit={handleRegister}>
-          <div className="input-group">
-            <label htmlFor="fullName">Name</label>
-            <input
-              id="fullName"
-              className="auth-input"
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Your full name"
-              required
-            />
+    <motion.div
+      initial="registinit"
+      animate="registin"
+      exit="registout"
+      variants={pageVariants}
+      transition={pageTransition}
+    >
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1>One step away to join Arsharatha.</h1>
+          <form onSubmit={handleRegister}>
+            <div className="input-group">
+              <label htmlFor="fullName">Name</label>
+              <input
+                id="fullName"
+                className="auth-input"
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Your full name"
+                required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                className="auth-input"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email address"
+                required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                className="auth-input"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Your password"
+                required
+              />
+            </div>
+            <button type="submit" className="auth-button" disabled={loading}>
+              {loading ? "Signing up..." : "Sign Up"}
+            </button>
+          </form>
+          <div className="auth-links">
+            <p>
+              Already have an account? <Link to="/login">Sign In</Link>
+            </p>
           </div>
-          <div className="input-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              className="auth-input"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email address"
-              required
-            />
-          </div>
-          <div className="input-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              className="auth-input"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Your password"
-              required
-            />
-          </div>
-          <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? "Signing up..." : "Sign Up"}
-          </button>
-        </form>
-        <div className="auth-links">
-          <p>
-            Already have an account? <Link to="/login">Sign In</Link>
-          </p>
+          {error && <p className="error-message">{error}</p>}
         </div>
-        {error && <p className="error-message">{error}</p>}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
