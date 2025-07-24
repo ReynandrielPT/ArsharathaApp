@@ -2,11 +2,11 @@ import React from 'react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error signing out:', error);
     }
   };

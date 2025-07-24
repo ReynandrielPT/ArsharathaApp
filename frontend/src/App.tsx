@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showRegister, setShowRegister] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -21,9 +23,17 @@ function App() {
     return <div>Loading...</div>;
   }
 
+  if (user) {
+    return <HomePage />;
+  }
+
   return (
     <div>
-      {user ? <HomePage /> : <LoginPage />}
+      {showRegister ? (
+        <RegisterPage onSwitchToLogin={() => setShowRegister(false)} />
+      ) : (
+        <LoginPage onSwitchToRegister={() => setShowRegister(true)} />
+      )}
     </div>
   );
 }
