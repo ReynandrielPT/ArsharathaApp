@@ -16,6 +16,14 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     setError('');
 
+    // TODO: Setelah backend siap, modifikasi logika di bawah.
+    // 1. Ganti `signInWithEmailAndPassword` dengan fetch call ke API login backend Anda.
+    //    Contoh: const response = await fetch('/api/v1/users/login', ...);
+    // 2. Backend harus mengembalikan token JWT dan field `firstLogin`.
+    // 3. Simpan token JWT di localStorage atau state management.
+    // 4. Jika response.firstLogin === true, navigasi ke '/assessment'.
+    // 5. Jika tidak, navigasi ke '/'.
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error: any) {
