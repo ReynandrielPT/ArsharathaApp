@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './firebase';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
+import ResetPasswordPage from './pages/ResetPassword';
 
-const App: React.FC = () => {
+function App() {
   const [user, loading] = useAuthState(auth);
 
   if (loading) {
@@ -17,13 +16,12 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={user ? <HomePage /> : <Navigate to="/login" />} />
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
-        <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/" />} />
         <Route path="/reset-password" element={!user ? <ResetPasswordPage /> : <Navigate to="/" />} />
+        <Route path="/" element={user ? <HomePage /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   );
-};
+}
 
 export default App;

@@ -1,31 +1,30 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebase';
-import { Link } from 'react-router-dom';
 
-const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [resetEmail, setResetEmail] = useState<string>('');
-  const [showReset, setShowReset] = useState<boolean>(false);
+const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [showReset, setShowReset] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
+    } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRequestPasswordReset = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRequestPasswordReset = async (e) => {
     e.preventDefault();
     if (!resetEmail) {
       setError("Please enter your email to reset password.");
@@ -35,16 +34,16 @@ const LoginPage: React.FC = () => {
     setError('');
     
     const actionCodeSettings = {
-      url: `${window.location.origin}/reset-password`,
+      url: `${import.meta.env.VITE_APP_URL || 'http://localhost:5173'}/reset-password`,
       handleCodeInApp: true,
     };
 
     try {
       await sendPasswordResetEmail(auth, resetEmail, actionCodeSettings);
-      alert("Reset Password Link has been sent to your email.");
+      alert("Link reset password telah dikirim ke email Anda.");
       setShowReset(false);
       setResetEmail('');
-    } catch (error: any) {
+    } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
@@ -101,11 +100,6 @@ const LoginPage: React.FC = () => {
           </button>
         </form>
       )}
-
-      <p>
-        Don't have an account?{' '}
-        <Link to="/register">Register</Link>
-      </p>
     </div>
   );
 };
