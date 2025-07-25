@@ -1,16 +1,482 @@
-:root {
-  --font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --background-gradient: linear-gradient(to right bottom, #42a5f5, #1de9b6);
+/**
+ * Main CSS file for the Vika application.
+ *
+ * This file imports the Inter font from Google Fonts, includes the base Tailwind CSS
+ * styles, components, and utilities, and defines custom global styles and animations.
+ */
+
+/* Import the Inter font family with various weights. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Include Tailwind CSS's base styles, component classes, and utility classes. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- Global Styles --- */
+
+/* Apply the Inter font to all elements for a consistent look. */
+* {
+  font-family: 'Inter', sans-serif;
 }
 
-:root.adhd-mode {
-  --font-family: 'OpenDyslexic', sans-serif;
-  --background-gradient: linear-gradient(to right bottom, #6b7280, #4b5563);
+/* Smooth scrolling for all elements and prevent horizontal overflow */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
-body, html {
-  font-family: var(--font-family);
-  background: var(--background-gradient);
+/* Prevent horizontal scrolling on body */
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
-/* ... (rest of the css) */
+/* --- Custom Scrollbar --- */
+
+/* Define the width of the scrollbar. */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Style the track (the background of the scrollbar). */
+::-webkit-scrollbar-track {
+  background: #f1f5f9; /* slate-100 */
+}
+
+/* Style the thumb (the draggable part of the scrollbar). */
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* slate-300 */
+  border-radius: 3px;
+}
+
+/* Style the thumb on hover for better user feedback. */
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; /* slate-400 */
+}
+
+/* --- Global Transitions --- */
+
+/* Apply a smooth transition to all properties on all elements. */
+* {
+  transition: all 0.2s ease;
+}
+
+/* --- Custom Animations --- */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* A floating effect for decorative elements. */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* A glowing effect for interactive elements. */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+  }
+}
+
+/* Blur to text animation for VIKA */
+@keyframes blurToText {
+  0% {
+    filter: blur(10px);
+    opacity: 0;
+  }
+  100% {
+    filter: blur(0px);
+    opacity: 1;
+  }
+}
+
+/* Fade + Scale In animation for badge */
+@keyframes fadeScaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scroll Animations */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleInCenter {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes countUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Tailwind safelist classes for VAK mode colors - ensures they are generated */
+/*
+bg-green-100 group-hover:bg-green-200 text-green-600    (Visual)
+bg-blue-100 group-hover:bg-blue-200 text-blue-600      (Auditory)
+bg-orange-100 group-hover:bg-orange-200 text-orange-600 (Kinesthetic)
+*/
+
+/* --- Animation Utility Classes --- */
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-in-from-left {
+  animation: slideInFromLeft 0.3s ease-out;
+}
+
+.slide-in-from-right {
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.blur-to-text {
+  animation: blurToText 1s ease-out forwards;
+}
+
+.fade-scale-in {
+  animation: fadeScaleIn 0.8s ease-out forwards;
+}
+
+/* Scroll Animation Classes */
+.scroll-fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-fade-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-fade-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-scale-in {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-count-up {
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  transition: all 0.8s ease-out;
+}
+
+/* Active states when in viewport */
+.scroll-fade-up.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-fade-left.animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-fade-right.animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-scale-in.animate {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.scroll-count-up.animate {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* --- Tailwind CSS @apply Directives (Example of extending Tailwind) --- */
+
+/* Animate-in utilities for more complex animations. */
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.slide-in-from-left-2 {
+  animation: slideInFromLeft 0.3s ease-out;
+}
+
+/* Custom gradient backgrounds. */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-gradient-secondary {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+/* Custom button styles with gradients and hover effects. */
+.btn-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Style for the generative canvas container. */
+.canvas-container {
+  background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+}
+
+/* Glass morphism effects for a modern UI. */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Enhanced focus states for better accessibility. */
+.focus-ring {
+  @apply focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500;
+}
+
+/* Enhanced hover effects. */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient text for headings. */
+.text-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom loading spinner. */
+.spinner {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 2px solid #ffffff;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Custom form input styles. */
+.form-input {
+  @apply w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm;
+}
+
+.form-input:hover {
+  @apply border-slate-300;
+}
+
+.form-input.error {
+  @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+}
+
+/* Custom shadow utilities. */
+.shadow-soft {
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-medium {
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
+}
+
+.shadow-strong {
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.16);
+}
+
+/* Custom transition utilities. */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-bounce {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Glowing button effect for special actions. */
+.glowing-button {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.glowing-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    transparent 30%,
+    rgba(128, 90, 213, 0.8) 50%,
+    transparent 70%,
+    transparent 100%
+  );
+  animation: rotate 4s linear infinite;
+  z-index: -1;
+}
+
+.glowing-button::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: #e9d5ff; /* purple-200 */
+  border-radius: 0.5rem; /* rounded-lg */
+  z-index: -1;
+}
+
+.glowing-button:hover::before {
+  animation-play-state: paused; /* Pause rotation on hover */
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.glowing-button:hover {
+  box-shadow: 0 0 15px rgba(128, 90, 213, 0.6); /* Stronger glow on hover */
+}
+
+.glowing-button:active {
+  transform: scale(0.98); /* Slight press effect */
+}
+

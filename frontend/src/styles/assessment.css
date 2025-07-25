@@ -1,0 +1,176 @@
+/* ADHD Assessment Page Styles */
+
+.assessment-page-background {
+  width: 100vw;
+  min-height: 100vh;
+  background: var(--background-primary);
+  padding: 2rem 0;
+}
+
+.assessment-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.assessment-card {
+  background: var(--background-secondary);
+  border-radius: 20px;
+  padding: 2.5rem 3rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.07);
+  color: var(--text-secondary);
+}
+
+.assessment-header h1 {
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.assessment-header p {
+  text-align: center;
+  color: var(--text-tertiary);
+  margin-bottom: 2.5rem;
+}
+
+.instructions-box {
+  background: var(--background-tertiary);
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 3rem;
+  font-size: 1rem;
+  border-left: 4px solid var(--adhd-accent, var(--accent-primary));
+  color: var(--text-secondary);
+}
+
+.part-header {
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.question-block {
+  background: var(--background-tertiary);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.question-block:focus-within {
+  border-color: var(--accent-primary);
+}
+
+.question-block p {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  padding-bottom: 5px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.radio-group input[type="radio"] {
+  display: none;
+}
+
+.radio-group .radio-button-custom {
+  height: 22px;
+  width: 22px;
+  background: var(--background-secondary);
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  display: inline-block;
+  position: relative;
+  margin-right: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.radio-group .radio-button-custom::after {
+  content: "";
+  position: absolute;
+  height: 10px;
+  width: 10px;
+  background: var(--background-secondary);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: all 0.2s ease-in-out;
+}
+
+.radio-group input[type="radio"]:checked + .radio-button-custom {
+  background: var(--adhd-accent, var(--accent-primary));
+  border-color: var(--adhd-accent, var(--accent-primary-hover));
+}
+
+.radio-group input[type="radio"]:checked + .radio-button-custom::after {
+  transform: translate(-50%, -50%) scale(1);
+  background: white;
+}
+
+.progress-bar-container {
+  width: 100%;
+  background: var(--background-tertiary);
+  border-radius: 12px;
+  margin: 3rem 0 2rem 0;
+  padding: 4px;
+}
+
+.progress-bar {
+  width: 0;
+  height: 16px;
+  background: var(--adhd-accent, var(--accent-primary));
+  border-radius: 8px;
+  transition: width 0.4s ease-in-out;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 10px;
+  border: none;
+  background: var(--adhd-accent, var(--accent-primary));
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  margin-top: 1rem;
+}
+
+.submit-button:hover {
+  background: var(--accent-primary-hover);
+  transform: translateY(-2px);
+}
+
+.submit-button:disabled {
+  background: var(--background-tertiary);
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+  transform: none;
+}
