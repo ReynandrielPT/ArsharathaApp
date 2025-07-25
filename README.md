@@ -79,7 +79,9 @@ backend/
 ### Installation Steps
 
 a. **IMPORTANT STEP**
-   Adjust with your own `google-credentials.json` and fill out the `.env` with your own LLM API key
+   ```bash
+   Adjust with your own google-credentials.json and fill out the .env with your own LLM API key
+   ```
 
 1. **Prepare Virtual Machine**
    ```bash
