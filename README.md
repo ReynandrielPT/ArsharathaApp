@@ -8,6 +8,7 @@ VikaAI is a revolutionary AI-powered conversational learning platform that trans
 - Real-time Visual Explanations
 - Document Analysis and Summarization
 - Adaptive Learning Paths
+- ADHD Mode that Enchances Learning Experience for Those with ADHD
 
 ## Architecture
 
