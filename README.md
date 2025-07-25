@@ -73,8 +73,13 @@ backend/
 ### Prerequisites
 - Virtual Machine (VM) or Linux server
 - Internet connection
+- Gemini API Key
+- Google Credentials
 
 ### Installation Steps
+
+a. **IMPORTANT STEP**
+   Adjust with your own `google-credentials.json` and fill out the `.env` with your own LLM API key
 
 1. **Prepare Virtual Machine**
    ```bash
