@@ -1,0 +1,155 @@
+/**
+ * CSS for the animated orb in the Live Conversation Overlay.
+ * This creates a fluid, "lava lamp" style animation with multiple blended,
+ * floating, and blurred circles.
+ */
+
+/* The container for the orb animation. */
+.orb-canvas {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Base styles for each individual orb. */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  /* The main floating animation. */
+  animation: float 6s ease-in-out infinite;
+  /* A slight blur to soften the edges. */
+  filter: blur(1px);
+  /* Blends the colors of overlapping orbs. */
+  mix-blend-mode: multiply;
+}
+
+/* Specific styles for the first orb. */
+.orb-1 {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.8) 0%, rgba(99, 102, 241, 0.2) 70%);
+  animation-delay: 0s;
+  animation-duration: 8s;
+}
+
+/* Specific styles for the second orb. */
+.orb-2 {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.7) 0%, rgba(147, 51, 234, 0.15) 70%);
+  animation-delay: -2s; /* Staggered animation start */
+  animation-duration: 10s;
+  top: 20px;
+  left: 30px;
+}
+
+/* Specific styles for the third orb. */
+.orb-3 {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.6) 0%, rgba(59, 130, 246, 0.1) 70%);
+  animation-delay: -4s; /* Staggered animation start */
+  animation-duration: 12s;
+  top: 40px;
+  right: 20px;
+}
+
+/* The keyframe animation for the floating effect. */
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translate(10px, -15px) scale(1.1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(-5px, -25px) scale(0.95);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(-15px, -10px) scale(1.05);
+    opacity: 0.85;
+  }
+}
+
+/* Responsive adjustments for smaller screens. */
+@media (max-width: 768px) {
+  .orb-canvas {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .orb-1 {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .orb-2 {
+    width: 75px;
+    height: 75px;
+  }
+  
+  .orb-3 {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* --- Voice Agent Pulse Effect --- */
+/* Styles applied when the agent is actively listening. */
+
+.listening .orb {
+  animation-duration: 2s;
+  filter: blur(0.5px);
+}
+
+.listening .orb-1 {
+  animation-name: pulse-1;
+}
+
+.listening .orb-2 {
+  animation-name: pulse-2;
+}
+
+.listening .orb-3 {
+  animation-name: pulse-3;
+}
+
+/* Keyframe animations for the pulsing effect. */
+@keyframes pulse-1 {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-2 {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  33% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
+}
+
+@keyframes pulse-3 {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  66% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}

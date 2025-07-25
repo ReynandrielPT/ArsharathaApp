@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { Paperclip, Loader2 } from 'lucide-react';
+import { useToast } from '../hooks/useToast';
 
 interface UploadedFile {
   fileId: string;
@@ -19,6 +20,7 @@ const MAX_SESSION_FILES = 5;
 const FileUploader: React.FC<FileUploaderProps> = ({ onUploadComplete, disabled, sessionId, existingFileCount }) => {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { addToast } = useToast();
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -28,7 +30,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadComplete, disabled,
 
     const remainingSlots = MAX_SESSION_FILES - existingFileCount;
     if (files.length > remainingSlots) {
-        alert(`You can only upload ${remainingSlots} more file(s) in this session.`);
+        addToast(`You can only upload ${remainingSlots} more file(s) in this session.`, 'error');
         if(fileInputRef.current) fileInputRef.current.value = '';
         return;
     }
@@ -52,12 +54,17 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUploadComplete, disabled,
       });
 
       if (response.data && response.data.files) {
+        addToast(`${response.data.files.length} file(s) uploaded successfully!`, 'success');
         onUploadComplete(response.data.files);
       }
     } catch (error) {
         const axiosError = error as AxiosError<{ message?: string }>;
-        const message = axiosError.response?.data?.message || 'An unknown error occurred.';
-        alert(`Upload failed: ${message}`);
+        if (axiosError.response && axiosError.response.status === 413) {
+            addToast('Upload failed: Total file size exceeds the 20MB limit.', 'error');
+        } else {
+            const message = axiosError.response?.data?.message || 'An unknown error occurred.';
+            addToast(`Upload failed: ${message}`, 'error');
+        }
         console.error('File upload failed:', error);
     } finally {
       setIsUploading(false);

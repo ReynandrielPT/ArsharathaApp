@@ -1,25 +1,30 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-export type VarkMode = 'V' | 'A' | 'R' | 'K';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+
+export type Language = 'id-ID' | 'en-US';
 
 interface Settings {
-  varkMode: VarkMode;
-  setVarkMode: (mode: VarkMode) => void;
-  speechEnabled: boolean;
-  setSpeechEnabled: (enabled: boolean) => void;
-  adhdEnabled: boolean;
-  setAdhdEnabled: (enabled: boolean) => void;
+  language: Language;
+  setLanguage: (language: Language) => void;
 }
 
 const SettingsContext = createContext<Settings | undefined>(undefined);
 
 export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [varkMode, setVarkMode] = useState<VarkMode>('R');
-  const [speechEnabled, setSpeechEnabled] = useState(true);
-  const [adhdEnabled, setAdhdEnabled] = useState(false);
+  const [language, setLanguageState] = useState<Language>(() => {
+    return (localStorage.getItem('vikaai-language') as Language) || 'id-ID';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('vikaai-language', language);
+  }, [language]);
+
+  const setLanguage = (newLanguage: Language) => {
+    setLanguageState(newLanguage);
+  };
 
   return (
-    <SettingsContext.Provider value={{ varkMode, setVarkMode, speechEnabled, setSpeechEnabled, adhdEnabled, setAdhdEnabled }}>
+    <SettingsContext.Provider value={{ language, setLanguage }}>
       {children}
     </SettingsContext.Provider>
   );

@@ -12,6 +12,7 @@ interface MessageFilePreviewProps {
 const MessageFilePreview: React.FC<MessageFilePreviewProps> = ({ files }) => {
   return (
     <div className="mb-2 group">
+      {/* Custom scrollbar styling for this specific component */}
       <style>
         {`
           .file-preview-scrollbar::-webkit-scrollbar {
