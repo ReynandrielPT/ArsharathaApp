@@ -46,7 +46,7 @@ const RegisterPage: React.FC = () => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to save user profile.");
       }
-      navigate("/");
+      navigate("/login");
     } catch (error: any) {
       setError(error.message);
     } finally {
