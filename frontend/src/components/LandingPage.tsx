@@ -41,7 +41,7 @@ const varkModes = [
   {
 
     id: 'kinesthetic',
-    name: 'Kinesthetic',
+    name: 'Kinesthetic (soon)',
     description: 'Hands-on interactive exercises with drag-and-drop activities',
     icon: Hand,
     color: 'kinesthetic',

@@ -243,7 +243,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600/10 to-blue-700/10 backdrop-blur-sm border border-blue-500/30 rounded-full px-4 py-2">
                 <Sparkles className="text-blue-400 w-4 h-4 animate-pulse" />
                 <span className="text-sm font-medium bg-gradient-to-r from-blue-300 to-blue-400 bg-clip-text text-transparent">
-                  Trusted by learners worldwide
+                  Empowering all learners worldwide
                 </span>
               </div>
             </div>

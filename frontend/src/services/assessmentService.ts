@@ -1,4 +1,4 @@
-const API_BASE = 'https://vika-ai.xyz/api'; 
+const API_BASE = 'https://vika-ai.xyz/api'; // Adjust based on your backend URL
 
 export interface AssessmentSubmission {
   responses: number[];

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { User, Bell, Palette, Volume2, Globe, Shield, LogOut, Loader2 } from 'lucide-react';
+import { User, Bell, Palette, Volume2, Globe, Shield, LogOut, Loader2, Brain } from 'lucide-react';
 import { useSettings, Language } from '../contexts/SettingsContext';
 import { useToast } from '../hooks/useToast';
+import { getAssessmentStatus } from '../services/assessmentService';
 
 interface UserProfile {
   username: string;
@@ -14,7 +15,7 @@ interface SettingsPageProps {
 const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { language, setLanguage } = useSettings();
+  const { language, setLanguage, isADHD, adhdMode, toggleAdhdFeature } = useSettings();
   const { addToast } = useToast();
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -24,31 +25,45 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
   };
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfileAndStatus = async () => {
       setIsLoading(true);
       try {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found');
 
-        const response = await fetch('/api/user/profile', {
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
+        const [profileResponse, statusResponse] = await Promise.all([
+          fetch('/api/user/profile', { headers: { 'Authorization': `Bearer ${token}` } }),
+          getAssessmentStatus()
+        ]);
 
-        if (!response.ok) {
+        if (!profileResponse.ok) {
           throw new Error('Failed to fetch profile');
         }
-        const data: UserProfile = await response.json();
-        setProfile(data);
+        const profileData: UserProfile = await profileResponse.json();
+        setProfile(profileData);
+
+        // The status is already being set in the SettingsProvider, 
+        // but we can re-sync here if needed or just rely on the context.
+
       } catch (error) {
-        console.error('Error fetching profile:', error);
-        // Handle error, e.g., redirect to login
+        console.error('Error fetching data:', error);
+        addToast('Failed to load settings data.', 'error');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchProfile();
+    fetchProfileAndStatus();
   }, []);
+
+  const handleToggleAdhdMode = async () => {
+    try {
+      await toggleAdhdFeature();
+      addToast(`ADHD Mode ${!adhdMode ? 'enabled' : 'disabled'}`, 'success');
+    } catch (error) {
+      addToast('Failed to update ADHD mode.', 'error');
+    }
+  };
 
   const getInitials = (name: string) => {
     if (!name) return '';
@@ -81,9 +96,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-200">{profile.username}</h3>
-
                 <p className="text-gray-400">Vika Learner</p>
-
               </div>
             </div>
           ) : (
@@ -120,7 +133,38 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ onLogout }) => {
           </div>
         </div>
 
-        
+        {/* Accessibility Section */}
+        <div className="bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-700 mb-6">
+          <div className="flex items-center gap-4 mb-6">
+            <Brain className="text-blue-400" size={24} />
+            <h2 className="text-xl font-bold text-gray-200">Accessibility</h2>
+          </div>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h3 className="font-medium text-gray-200">ADHD Status</h3>
+                    <p className="text-sm text-gray-400">
+                        {isADHD ? "ADHD traits detected based on assessment." : "ADHD traits not detected."}
+                    </p>
+                </div>
+                <span className={`px-3 py-1 text-sm font-medium rounded-full ${isADHD ? 'bg-yellow-200 text-yellow-800' : 'bg-green-200 text-green-800'}`}>
+                    {isADHD ? 'Detected' : 'Not Detected'}
+                </span>
+            </div>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h3 className="font-medium text-gray-200">ADHD Mode</h3>
+                    <p className="text-sm text-gray-400">Toggle UI enhancements for focus and readability.</p>
+                </div>
+                <button
+                    onClick={handleToggleAdhdMode}
+                    className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-500 ${adhdMode ? 'bg-blue-600' : 'bg-gray-600'}`}>
+                    <span
+                        className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ${adhdMode ? 'translate-x-6' : 'translate-x-1'}`}/>
+                </button>
+            </div>
+          </div>
+        </div>
 
         {/* Account Actions */}
         <div className="bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-700">

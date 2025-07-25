@@ -1,27 +1,38 @@
 import { Schema, model, Document } from 'mongoose';
 
+/**
+ * Represents a user of the application.
+ */
 export interface IUser extends Document {
-  uid: string; // Firebase User ID
-  email: string;
-  fullName: string;
-  settings: {
-    bionicReading: boolean;
-    font: 'default' | 'OpenDyslexic';
-    spacing: 'default' | 'medium' | 'large';
-    chunking: boolean;
-  };
+  /** The user's unique username. */
+  username: string;
+  /** The user's hashed password. */
+  password: string;
+  /** Whether the user has completed the ADHD assessment. */
+  hasCompletedAssessment: boolean;
+  /** Whether the user has been identified as having ADHD characteristics. */
+  isADHD: boolean;
+  /** Whether the user has ADHD mode enabled. */
+  adhdMode: boolean;
+  /** The date of the user's last assessment. */
+  lastAssessmentDate?: Date;
 }
 
 const userSchema = new Schema<IUser>({
-  uid: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  fullName: { type: String, required: true },
-  settings: {
-    bionicReading: { type: Boolean, default: false },
-    font: { type: String, enum: ['default', 'OpenDyslexic'], default: 'default' },
-    spacing: { type: String, enum: ['default', 'medium', 'large'], default: 'default' },
-    chunking: { type: Boolean, default: false },
-  },
-}, { timestamps: true });
+  /** The username for the account, must be unique. */
+  username: { type: String, required: true, unique: true },
+  /** The hashed password for the account. */
+  password: { type: String, required: true },
+  /** Whether the user has completed the ADHD assessment. */
+  hasCompletedAssessment: { type: Boolean, default: false },
+  /** Whether the user has been identified as having ADHD characteristics. */
+  isADHD: { type: Boolean, default: false },
+  /** Whether the user has ADHD mode enabled. */
+  adhdMode: { type: Boolean, default: false },
+  /** The date of the user's last assessment. */
+  lastAssessmentDate: { type: Date },
+}, {
+  timestamps: true
+});
 
-export const User = model<IUser>('User', userSchema);
+export const User = model('User', userSchema);

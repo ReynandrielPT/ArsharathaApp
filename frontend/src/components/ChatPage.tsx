@@ -14,6 +14,7 @@ import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import MessageFilePreview from './MessageFilePreview';
 import LiveConversationOverlay from './LiveConversationOverlay';
 import { useSettings } from '../contexts/SettingsContext';
+import BionicReading from './BionicReading';
 
 // --- Main Component Interfaces ---
 
@@ -94,6 +95,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ sessionId: initialSessionId, isNew,
   const { sessionId } = useParams<{ sessionId: string }>(); // Extracts session ID from the URL.
   const messagesEndRef = useRef<HTMLDivElement>(null); // Ref for auto-scrolling chat messages.
   const canvasContainerRef = useRef<HTMLDivElement>(null); // Ref for the canvas container to determine its size.
+  const { adhdMode } = useSettings();
 
   const { language } = useSettings(); // Retrieves current language setting from context.
   const { isSpeaking, play, cancel: cancelAudio } = useAudioPlayer(); // Hook for playing audio (TTS).
@@ -300,7 +302,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ sessionId: initialSessionId, isNew,
     return () => {
       window.removeEventListener('triggerVisualization', handleTriggerVisualization);
     };
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount.
 
   /**
    * Sends the user's message and any staged files to the backend to start or continue a session.
@@ -440,21 +442,21 @@ const ChatPage: React.FC<ChatPageProps> = ({ sessionId: initialSessionId, isNew,
     const { command, payload, id } = obj;
     switch (command) {
       case 'createText':
-        return <KonvaText key={id} x={payload.x} y={payload.y} text={payload.text} fontSize={payload.fontSize || 18} fill={payload.color || '#333'} />;
+        return <KonvaText key={id} x={payload.x} y={payload.y} text={payload.text} fontSize={payload.fontSize || 18} fill={payload.color || '#E5E7EB'} />;
       case 'drawArrow':
-        return <Arrow key={id} points={payload.points} pointerLength={8} pointerWidth={8} fill={payload.color || '#333'} stroke={payload.color || '#333'} strokeWidth={3} />;
+        return <Arrow key={id} points={payload.points} pointerLength={8} pointerWidth={8} fill={payload.color || '#E5E7EB'} stroke={payload.color || '#E5E7EB'} strokeWidth={3} />;
       case 'drawRectangle':
         return (
           <React.Fragment key={id}>
-            <Rect x={payload.x} y={payload.y} width={payload.width} height={payload.height} fill={payload.color} stroke="#333" strokeWidth={2} cornerRadius={5}/>
-            {payload.label && <KonvaText x={payload.x + 10} y={payload.y + 10} text={payload.label} fontSize={14} fill="#333" />}
+            <Rect x={payload.x} y={payload.y} width={payload.width} height={payload.height} fill={payload.color} stroke="#E5E7EB" strokeWidth={2} cornerRadius={5}/>
+            {payload.label && <KonvaText x={payload.x + 10} y={payload.y + 10} text={payload.label} fontSize={14} fill="#E5E7EB" />}
           </React.Fragment>
         );
       case 'drawCircle':
         return (
           <React.Fragment key={id}>
-            <Circle x={payload.x} y={payload.y} radius={payload.radius} fill={payload.color} stroke="#333" strokeWidth={2} />
-            {payload.label && <KonvaText x={payload.x - (payload.label.length * 4)} y={payload.y + payload.radius + 5} text={payload.label} fontSize={12} fill="#333" />}
+            <Circle x={payload.x} y={payload.y} radius={payload.radius} fill={payload.color} stroke="#E5E7EB" strokeWidth={2} />
+            {payload.label && <KonvaText x={payload.x - (payload.label.length * 4)} y={payload.y + payload.radius + 5} text={payload.label} fontSize={12} fill="#E5E7EB" />}
           </React.Fragment>
         );
       case 'createTable':
@@ -466,8 +468,8 @@ const ChatPage: React.FC<ChatPageProps> = ({ sessionId: initialSessionId, isNew,
               const colX = payload.x + payload.colWidths.slice(0, i).reduce((a: number, b: number) => a + b, 0);
               return (
                 <React.Fragment key={`header-${i}`}>
-                  <Rect x={colX} y={payload.y} width={payload.colWidths[i]} height={headerHeight} stroke="#333" strokeWidth={1} />
-                  <KonvaText x={colX + 5} y={payload.y + 10} text={header} fontStyle="bold" fontSize={14} />
+                  <Rect x={colX} y={payload.y} width={payload.colWidths[i]} height={headerHeight} stroke="#E5E7EB" strokeWidth={1} />
+                  <KonvaText x={colX + 5} y={payload.y + 10} text={header} fontStyle="bold" fontSize={14} fill="#E5E7EB"/>
                 </React.Fragment>
               );
             })}
@@ -476,14 +478,14 @@ const ChatPage: React.FC<ChatPageProps> = ({ sessionId: initialSessionId, isNew,
                  [...Array(payload.cols)].map((_, colIndex) => {
                     const cellX = payload.x + payload.colWidths.slice(0, colIndex).reduce((a:number, b:number) => a + b, 0);
                     const cellY = payload.y + headerHeight + (rowIndex * payload.rowHeight);
-                    return <Rect key={`cell-${rowIndex}-${colIndex}`} x={cellX} y={cellY} width={payload.colWidths[colIndex]} height={payload.rowHeight} stroke="#333" strokeWidth={1} />
+                    return <Rect key={`cell-${rowIndex}-${colIndex}`} x={cellX} y={cellY} width={payload.colWidths[colIndex]} height={payload.rowHeight} stroke="#E5E7EB" strokeWidth={1} />
                  })
             ))}
             {/* Render filled table cells */}
             {payload.cells?.map((cell: any, i: number) => {
                const cellX = payload.x + payload.colWidths.slice(0, cell.col).reduce((a:number, b:number) => a + b, 0);
                const cellY = payload.y + (cell.row * payload.rowHeight);
-               return <KonvaText key={`fill-${i}`} x={cellX + 5} y={cellY + 10} text={cell.text} fontSize={14} />
+               return <KonvaText key={`fill-${i}`} x={cellX + 5} y={cellY + 10} text={cell.text} fontSize={14} fill="#E5E7EB"/>
             })}
           </React.Fragment>
         );
@@ -546,7 +548,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ sessionId: initialSessionId, isNew,
     
     // Cleanup function: disconnect the observer when the component unmounts.
     return () => resizeObserver.disconnect();
-  }, []);
+  }, []); // Empty dependency array ensures this runs only once on mount.
 
   return (
     <div className="h-screen flex bg-slate-100 overflow-hidden"> {/* Main container for the chat and canvas layout. */}
@@ -575,7 +577,7 @@ const ChatPage: React.FC<ChatPageProps> = ({ sessionId: initialSessionId, isNew,
                         {message.type === 'ai' && <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0"><img src={vikaaiIcon} alt="Bot icon" className="w-6 h-6 rounded-sm" /></div>} {/* AI avatar. */}
                         <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${message.type === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200'}`}> {/* Message bubble styling. */}
                             {message.type === 'user' && message.files && message.files.length > 0 && <MessageFilePreview files={message.files} />} {/* Display file preview for user messages. */}
-                            <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                            {adhdMode && message.type === 'ai' ? <BionicReading text={message.content} /> : <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>}
                             <span className={`text-xs opacity-70 mt-1 block ${message.type === 'user' ? 'text-blue-100' : 'text-gray-400'}`}>{message.timestamp.toLocaleTimeString()}</span> {/* Message timestamp. */}
                         </div>
                         {message.type === 'user' && <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0"><User size={16} className="text-gray-300" /></div>} {/* User avatar. */}

@@ -480,3 +480,15 @@ bg-orange-100 group-hover:bg-orange-200 text-orange-600 (Kinesthetic)
   transform: scale(0.98); /* Slight press effect */
 }
 
+.adhd-mode {
+    --font-size-base: 18px;
+    --line-height-base: 1.8;
+    --letter-spacing-base: 0.05em;
+}
+
+body.adhd-mode {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    letter-spacing: var(--letter-spacing-base);
+}
+

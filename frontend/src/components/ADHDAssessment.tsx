@@ -9,6 +9,7 @@ interface Question {
   category: 'inattention' | 'hyperactivity-impulsivity';
 }
 
+// Pertanyaan yang sama persis dari ADHDAssessmentPage.tsx
 const questions: Question[] = [
   // Part A: Inattention (9 questions)
   { id: 1, text: "How often do you fail to give close attention to details or make careless mistakes in your work or other activities?", category: 'inattention' },
@@ -33,6 +34,7 @@ const questions: Question[] = [
 ];
 
 const ADHDAssessment: React.FC = () => {
+  // Menggunakan array dengan 18 elemen untuk 18 pertanyaan (sama dengan ADHDAssessmentPage.tsx)
   const [responses, setResponses] = useState<number[]>(Array(18).fill(-1));
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const navigate = useNavigate();
@@ -57,25 +59,34 @@ const ADHDAssessment: React.FC = () => {
     }
   };
 
+  // Algoritma penilaian yang sama persis dari ADHDAssessmentPage.tsx
   const calculateResult = async () => {
+    // Cek apakah semua pertanyaan sudah dijawab
     const answeredQuestions = responses.filter((a) => a !== -1).length;
     if (answeredQuestions < questions.length) {
       alert("Please answer all questions before submitting.");
       return;
     }
 
+    // Part A: Inattention (pertanyaan 0-8)
     const partAAnswers = responses.slice(0, 9);
+    // Part B: Hyperactivity-Impulsivity (pertanyaan 9-17)
     const partBAnswers = responses.slice(9, 18);
+
+    // Menghitung jumlah gejala yang signifikan (skor >= 3 = "Often" atau "Very Often")
     const partASymptomCount = partAAnswers.filter((answer) => answer >= 3).length;
     const partBSymptomCount = partBAnswers.filter((answer) => answer >= 3).length;
 
+    // ADHD terdeteksi jika ada >= 5 gejala signifikan di Part A ATAU Part B
     const adhdDetected = partASymptomCount >= 5 || partBSymptomCount >= 5;
 
+    // Menghitung skor total
     const totalScore = responses.reduce((acc, val) => acc + val, 0);
     const partAScore = partAAnswers.reduce((acc, val) => acc + val, 0);
     const partBScore = partBAnswers.reduce((acc, val) => acc + val, 0);
 
     try {
+      // Submit assessment to backend
       const result = await submitAssessment({
         responses,
         adhdDetected,
@@ -86,6 +97,7 @@ const ADHDAssessment: React.FC = () => {
         partBSymptomCount,
       });
 
+      // Navigate ke hasil dengan data yang sama seperti ADHDAssessmentPage.tsx
       navigate('/assessment-result', { 
         state: { 
           adhdDetected,
@@ -99,6 +111,7 @@ const ADHDAssessment: React.FC = () => {
       });
     } catch (error) {
       console.error('Failed to submit assessment:', error);
+      // Still navigate to results even if submission fails
       navigate('/assessment-result', { 
         state: { 
           adhdDetected,
@@ -114,7 +127,7 @@ const ADHDAssessment: React.FC = () => {
   };
 
   const currentQ = questions[currentQuestion];
-  const isAnswered = responses[currentQuestion] !== -1; 
+  const isAnswered = responses[currentQuestion] !== -1; // Menggunakan index langsung
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 
   return (

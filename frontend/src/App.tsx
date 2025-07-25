@@ -11,6 +11,7 @@ import LandingPage from './components/LandingPage';
 import AssessmentResultPage from './components/ADHDAssessmentResult';
 import ADHDAssessment from './components/ADHDAssessment';
 import { ToastProvider } from './contexts/ToastContext';
+import { useSettings } from './contexts/SettingsContext';
 
 // --- Type Definitions ---
 
@@ -40,6 +41,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Manages initial loading state for authentication check.
+  const { adhdMode } = useSettings();
   
   
   const navigate = useNavigate(); // Hook for programmatic navigation.
@@ -85,6 +87,14 @@ function App() {
     }
     setIsLoading(false); // Mark loading as complete after the check.
   }, []);
+
+  useEffect(() => {
+    if (adhdMode) {
+      document.body.classList.add('adhd-mode');
+    } else {
+      document.body.classList.remove('adhd-mode');
+    }
+  }, [adhdMode]);
 
   
 
@@ -146,7 +156,13 @@ function App() {
   }
   
   // Determine whether to show the navigation bar based on authentication and current path.
-  const showNavBar = location.pathname !== '/' && !location.pathname.startsWith('/landing') && !location.pathname.startsWith('/login') && !location.pathname.startsWith('/register');
+  const showNavBar = isAuthenticated &&
+                   location.pathname !== '/' &&
+                   !location.pathname.startsWith('/landing') &&
+                   !location.pathname.startsWith('/login') &&
+                   !location.pathname.startsWith('/register') &&
+                   !location.pathname.startsWith('/adhd-assessment') &&
+                   !location.pathname.startsWith('/assessment-result');
 
   return (
     <ToastProvider> {/* Provides toast notifications throughout the app. */}

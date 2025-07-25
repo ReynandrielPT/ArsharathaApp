@@ -1,6 +1,11 @@
 import { IMessage } from '../models/Message';
 import { formatHistory as formatMainSessionHistory, generativeModel } from '../llm';
 
+/**
+ * Formats the history of a live conversation into a simple string for the LLM.
+ * @param {IMessage[]} messages - The array of messages from the live conversation.
+ * @returns {string} A formatted string representing the conversation history.
+ */
 function formatLiveHistory(messages: IMessage[]): string {
   if (!messages || messages.length === 0) {
     return 'No live conversation history yet.';
@@ -10,11 +15,28 @@ function formatLiveHistory(messages: IMessage[]): string {
   }).join('\n');
 }
 
+/**
+ * Cleans the verbal response from the LLM to remove markdown characters for clean TTS.
+ * @param {string} text - The text to clean.
+ * @returns {string} The cleaned text suitable for speech synthesis.
+ */
 function cleanVerbalResponse(text: string): string {
   if (!text) return '';
+  // Removes markdown characters like *, _, # to prevent them from being read aloud.
   return text.replace(/[*_#]/g, '');
 }
 
+/**
+ * Analyzes the user's speech and conversation context to determine the next action.
+ * This is the core logic of the voice agent, deciding whether to answer directly,
+ * offer a visualization, or trigger a visualization.
+ *
+ * @param {string} userTranscript - The latest transcript from the user's speech.
+ * @param {IMessage[]} liveHistory - The history of the current live conversation.
+ * @param {IMessage[]} sessionHistory - The history of the parent chat session for context.
+ * @param {string} [fileContent] - Optional content from uploaded files.
+ * @returns {Promise<{ verbalResponse: string; triggerVisualization: boolean; promptForLLM?: string }>} An object containing the AI's verbal response and instructions for the frontend.
+ */
 export const processUserUtterance = async (
   userTranscript: string,
   liveHistory: IMessage[],
@@ -26,9 +48,10 @@ export const processUserUtterance = async (
   const formattedSessionHistory = formatMainSessionHistory(sessionHistory);
   const formattedLiveHistory = formatLiveHistory(liveHistory);
 
+  // This detailed prompt guides the LLM to act as the Vika Voice Agent.
   const decisionPrompt = `
     **YOUR CHARACTER:**
-    You are Citta, an AI LIVE Tutor Voice Agent. Your personality is enthusiastic, patient, and incredibly supportive. You are passionate about making complex topics easy to understand. Your goal is to be a helpful and engaging learning companion.
+    You are Vika, an AI LIVE Tutor Voice Agent. Your personality is enthusiastic, patient, and incredibly supportive. You are passionate about making complex topics easy to understand. Your goal is to be a helpful and engaging learning companion.
 
     **YOUR TASK:**
     Analyze the user's request, the conversation history, and any provided documents to decide on the best course of action. Respond with a valid JSON object describing your chosen action.
@@ -69,6 +92,7 @@ export const processUserUtterance = async (
     const text = response.text();
     console.log(`[VoiceAgent] DEBUG: Raw LLM response received: ${text}`);
     
+    // Extract the JSON object from the markdown code block.
     const jsonString = text.replace(/```json\n/g, '').replace(/\n```/g, '');
     const decision = JSON.parse(jsonString);
     console.log(`[VoiceAgent] SUCCESS: Parsed LLM decision:`, decision);
@@ -85,6 +109,7 @@ export const processUserUtterance = async (
         promptForLLM: decision.visualizationPrompt,
       };
     } else {
+      // Handles both 'answer' and 'offer' actions.
       console.log(`[VoiceAgent] INFO: Action is "${decision.action}". Verbal response: "${decision.verbalResponse}"`);
       return {
         verbalResponse: cleanVerbalResponse(decision.verbalResponse),
@@ -93,6 +118,7 @@ export const processUserUtterance = async (
     }
   } catch (error) {
     console.error('[VoiceAgent] FATAL: Error processing LLM decision or parsing JSON.', error);
+    // Provide a safe, generic fallback response in case of an error.
     const fallbackResponse = "I'm sorry, I seem to be having a little trouble. Could you please say that again?";
     return {
       verbalResponse: fallbackResponse,

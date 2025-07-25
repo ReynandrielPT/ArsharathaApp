@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 
+// Helper function to convert Base64 to an ArrayBuffer
 const base64ToArrayBuffer = (base64: string) => {
   const binaryString = window.atob(base64);
   const len = binaryString.length;
@@ -25,11 +26,13 @@ export const useAudioPlayer = () => {
     }
 
     try {
+      // Initialize AudioContext on user interaction (best practice)
       if (!audioContextRef.current) {
         audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
       
       const audioContext = audioContextRef.current;
+      // Resume context if it's suspended (required by modern browsers)
       if (audioContext.state === 'suspended') {
         audioContext.resume();
       }

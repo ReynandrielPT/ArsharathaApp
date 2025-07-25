@@ -1,6 +1,6 @@
 import express from 'express';
 import { isValidObjectId } from 'mongoose';
-import { firebaseAuthMiddleware, IAuthRequest } from '../middleware/firebaseAuth';
+import { authMiddleware, IAuthRequest } from '../middleware/auth';
 import { upload } from '../middleware/multer';
 import { File } from '../models/File';
 import { Message } from '../models/Message';
@@ -8,7 +8,12 @@ import { Message } from '../models/Message';
 const router = express.Router();
 const MAX_SESSION_FILES = 5;
 
-router.post('/', firebaseAuthMiddleware, (req: IAuthRequest, res) => {
+/**
+ * @route   POST /api/upload
+ * @desc    Uploads one or more files.
+ * @access  Private
+ */
+router.post('/', authMiddleware, (req: IAuthRequest, res) => {
   upload(req, res, async (err: any) => {
     if (err) {
       return res.status(400).json({ message: err.message });
@@ -21,11 +26,12 @@ router.post('/', firebaseAuthMiddleware, (req: IAuthRequest, res) => {
       return res.status(400).json({ message: 'No files uploaded.' });
     }
 
-    if (!req.user) {
+    if (!req.userId) {
       return res.status(401).json({ message: 'Unauthorized.' });
     }
 
     try {
+      // Server-side validation for total files in a session
       if (sessionId && isValidObjectId(sessionId)) {
         const messages = await Message.find({ sessionId: sessionId });
         const existingFileCount = messages.reduce((sum, msg) => sum + (msg.fileIds?.length || 0), 0);
@@ -44,7 +50,7 @@ router.post('/', firebaseAuthMiddleware, (req: IAuthRequest, res) => {
           path: file.path,
           mimetype: file.mimetype,
           size: file.size,
-          userId: req.user?.uid,
+          userId: req.userId,
         });
         await newFile.save();
         return {

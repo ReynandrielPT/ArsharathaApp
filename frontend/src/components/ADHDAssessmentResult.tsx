@@ -2,11 +2,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toggleADHDMode } from "../services/assessmentService";
 import "../styles/result.css";
+import { useSettings } from "../contexts/SettingsContext";
 
 const AssessmentResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isEnabling, setIsEnabling] = useState(false);
+  const { setAdhdMode, setAdhdStatus } = useSettings();
   
   const { 
     adhdDetected = false, 
@@ -25,6 +27,8 @@ const AssessmentResultPage = () => {
     setIsEnabling(true);
     try {
       await toggleADHDMode(true);
+      setAdhdMode(true);
+      setAdhdStatus(true);
       alert(
         "ADHD Mode has been enabled! You will be redirected to the homepage."
       );
